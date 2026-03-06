@@ -2668,14 +2668,28 @@
      INIT
   ═══════════════════════════════════════════════ */
   // Handle URL hash navigation
-  function checkHash() {
-    const pages = ['home', 'downloader', 'optimizer', 'dashboard', 'library', 'login', 'signup'];
-    const hash = window.location.hash.replace('#', '');
-    if (pages.includes(hash)) navigate(hash);
-  }
+ function checkHash() {
+     const pages = ['home', 'download', 'captions', 'dashboard', 'library', 'login', 'signup'];
+     const hash = window.location.hash.replace('#', '');
+     if (pages.includes(hash)) navigate(hash);
+ }
   window.addEventListener('hashchange', checkHash);
   checkHash();
 
+  </script>
+  <script>
+function navigate(sectionId) {
+    const section = document.getElementById(sectionId);
+
+    if (section) {
+        window.location.hash = sectionId;
+
+        section.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+}
   </script>
 </body>
 </html>
