@@ -1,0 +1,2681 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SocialHub — Free Social Media Optimizer & Downloader</title>
+  <meta name="description" content="Download videos, optimize captions, manage content. Instagram, YouTube, TikTok & more. 100% free." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════
+       RESET & ROOT
+    ═══════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #07080f;
+      --surface:   #0e0f1d;
+      --surface2:  #141526;
+      --border:    rgba(255,255,255,0.07);
+      --border2:   rgba(255,255,255,0.13);
+      --text:      #ecedf8;
+      --muted:     #636884;
+      --brand:     #5865f9;
+      --brand-dim: rgba(88,101,249,0.18);
+      --brand-glow:rgba(88,101,249,0.35);
+      --cyan:      #22d3ee;
+      --purple:    #a855f7;
+      --pink:      #ec4899;
+      --amber:     #f59e0b;
+      --green:     #10b981;
+      --red:       #ef4444;
+      --radius:    14px;
+      --radius-sm: 9px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    [data-theme="light"] {
+      --bg:       #f0f1fa;
+      --surface:  #ffffff;
+      --surface2: #f5f6fe;
+      --border:   rgba(0,0,0,0.07);
+      --border2:  rgba(0,0,0,0.13);
+      --text:     #14152a;
+      --muted:    #7880a0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       NOISE + GRID BG
+    ═══════════════════════════════════════════════════ */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse 90% 55% at 50% -10%, rgba(88,101,249,0.14) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 90% 20%,  rgba(168,85,247,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 40% at 10% 80%,  rgba(34,211,238,0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Cpath d='M60 0v60M0 60h60' stroke='rgba(255,255,255,0.018)' stroke-width='1'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       SCROLLBAR
+    ═══════════════════════════════════════════════════ */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(88,101,249,0.3); border-radius: 99px; }
+
+    /* ═══════════════════════════════════════════════════
+       TYPOGRAPHY
+    ═══════════════════════════════════════════════════ */
+    h1, h2, h3, h4, h5 { font-family: var(--font-display); line-height: 1.2; }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--purple) 50%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       GLASS CARDS
+    ═══════════════════════════════════════════════════ */
+    .glass {
+      background: rgba(14,15,29,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    [data-theme="light"] .glass {
+      background: rgba(255,255,255,0.75);
+    }
+
+    .glass-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    }
+
+    .glass-card:hover {
+      border-color: var(--border2);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.25), 0 0 0 1px var(--border2);
+      transform: translateY(-2px);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       BUTTONS
+    ═══════════════════════════════════════════════════ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.875rem;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+      text-decoration: none;
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      transition: background 0.15s;
+    }
+
+    .btn:hover::after { background: rgba(255,255,255,0.06); }
+    .btn:active { transform: scale(0.97) !important; }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      padding: 10px 20px;
+      box-shadow: 0 0 0 0 var(--brand-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 24px var(--brand-glow), 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      padding: 10px 20px;
+      border: 1px solid var(--border2);
+    }
+
+    .btn-secondary:hover { transform: translateY(-1px); background: var(--surface); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 14px;
+      border: 1px solid transparent;
+    }
+
+    .btn-ghost:hover { color: var(--text); background: var(--surface2); border-color: var(--border); }
+
+    .btn-icon {
+      background: var(--surface2);
+      color: var(--muted);
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .btn-icon:hover { color: var(--text); border-color: var(--border2); }
+
+    .btn-lg { padding: 14px 28px; font-size: 1rem; border-radius: var(--radius); }
+
+    /* ═══════════════════════════════════════════════════
+       FORM INPUTS
+    ═══════════════════════════════════════════════════ */
+    .input, .textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      padding: 11px 15px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input::placeholder, .textarea::placeholder { color: var(--muted); }
+
+    .input:focus, .textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-dim);
+    }
+
+    .textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
+
+    /* ═══════════════════════════════════════════════════
+       BADGES
+    ═══════════════════════════════════════════════════ */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: var(--font-display);
+      letter-spacing: 0.02em;
+    }
+
+    .badge-brand  { background: var(--brand-dim);              color: #8b9bff; }
+    .badge-green  { background: rgba(16,185,129,0.15);         color: #34d399; }
+    .badge-amber  { background: rgba(245,158,11,0.15);         color: #fbbf24; }
+    .badge-red    { background: rgba(239,68,68,0.15);          color: #f87171; }
+    .badge-purple { background: rgba(168,85,247,0.15);         color: #c084fc; }
+    .badge-cyan   { background: rgba(34,211,238,0.15);         color: #67e8f9; }
+
+    /* ═══════════════════════════════════════════════════
+       LAYOUT
+    ═══════════════════════════════════════════════════ */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+    .container-sm { max-width: 720px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* ═══════════════════════════════════════════════════
+       NAVBAR
+    ═══════════════════════════════════════════════════ */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    #navbar.scrolled {
+      background: rgba(7,8,15,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme="light"] #navbar.scrolled { background: rgba(240,241,250,0.85); }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-logo-icon {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--purple) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 0.9rem; color: #fff;
+      box-shadow: 0 0 20px var(--brand-glow);
+      transition: box-shadow 0.3s;
+    }
+
+    .nav-logo:hover .nav-logo-icon { box-shadow: 0 0 30px var(--brand-glow); }
+
+    .nav-logo-text {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 1.1rem;
+      color: var(--text);
+    }
+
+    .nav-logo-text span { color: var(--brand); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-link {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 7px 13px;
+      border-radius: var(--radius-sm);
+      transition: all 0.15s;
+    }
+
+    .nav-link:hover, .nav-link.active { color: var(--text); background: var(--surface2); }
+
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+
+    .theme-toggle {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: all 0.15s;
+    }
+
+    .theme-toggle:hover { border-color: var(--border2); }
+
+    /* Mobile hamburger */
+    .hamburger { display: none; }
+
+    /* ═══════════════════════════════════════════════════
+       PAGES (SPA routing)
+    ═══════════════════════════════════════════════════ */
+    .page { display: none; animation: fadeSlideUp 0.45s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+    .page.active { display: block; }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══════════════════════════════════════════════════
+       HOME PAGE
+    ═══════════════════════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 24px 60px;
+    }
+
+    .hero-inner { max-width: 820px; }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 14px;
+      border-radius: 99px;
+      border: 1px solid rgba(88,101,249,0.3);
+      background: rgba(88,101,249,0.08);
+      font-size: 0.78rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: #8b9bff;
+      margin-bottom: 28px;
+      animation: fadeSlideUp 0.6s 0.1s both;
+    }
+
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--brand);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero-title {
+      font-size: clamp(2.6rem, 7vw, 5.2rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: 22px;
+      animation: fadeSlideUp 0.6s 0.15s both;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--muted);
+      max-width: 580px;
+      margin: 0 auto 40px;
+      animation: fadeSlideUp 0.6s 0.2s both;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      animation: fadeSlideUp 0.6s 0.25s both;
+    }
+
+    .platform-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 56px;
+      animation: fadeSlideUp 0.6s 0.35s both;
+    }
+
+    .platform-pill {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: 99px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .platform-pill:hover { border-color: var(--border2); transform: translateY(-2px); }
+
+    /* Feature grid */
+    .features-section { padding: 80px 0; }
+
+    .section-header { text-align: center; margin-bottom: 52px; }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-top: 10px;
+      margin-bottom: 14px;
+    }
+
+    .section-desc { color: var(--muted); max-width: 520px; margin: 0 auto; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 18px;
+    }
+
+    .feature-card {
+      padding: 26px;
+      cursor: pointer;
+    }
+
+    .feature-icon {
+      width: 48px; height: 48px;
+      border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 18px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      transition: color 0.2s;
+    }
+
+    .feature-card:hover h3 { color: var(--brand); }
+
+    .feature-card p { color: var(--muted); font-size: 0.875rem; line-height: 1.65; }
+
+    .feature-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      color: var(--brand);
+      font-family: var(--font-display);
+      font-weight: 600;
+      margin-top: 14px;
+      transition: gap 0.2s;
+    }
+
+    .feature-card:hover .feature-arrow { gap: 9px; }
+
+    /* Stats bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 64px 0;
+    }
+
+    .stat-item {
+      background: var(--surface);
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--brand);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label { color: var(--muted); font-size: 0.85rem; }
+
+    /* CTA banner */
+    .cta-banner {
+      padding: 60px;
+      text-align: center;
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      margin: 0 0 80px;
+    }
+
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 80% at 50% 50%, rgba(88,101,249,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-banner h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 800; margin-bottom: 12px; }
+    .cta-banner p  { color: var(--muted); margin-bottom: 28px; }
+
+    /* ═══════════════════════════════════════════════════
+       DOWNLOADER PAGE
+    ═══════════════════════════════════════════════════ */
+    .page-header { padding: 100px 0 48px; text-align: center; }
+    .page-title  { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; letter-spacing: -0.03em; margin: 10px 0 14px; }
+    .page-desc   { color: var(--muted); max-width: 520px; margin: 0 auto; }
+
+    .url-drop-zone {
+      border: 2px dashed var(--border2);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: all 0.25s;
+      background: var(--surface);
+    }
+
+    .url-drop-zone.drag-over {
+      border-color: var(--brand);
+      background: var(--brand-dim);
+    }
+
+    .url-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 6px 8px 6px 16px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .url-input-wrap:focus-within {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-dim);
+    }
+
+    .url-input-wrap input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+    }
+
+    .url-input-wrap input::placeholder { color: var(--muted); }
+
+    .platform-detected {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .platform-detected.show { display: flex; }
+    .platform-detected-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+
+    /* Video result card */
+    .video-result {
+      display: none;
+      margin-top: 24px;
+    }
+
+    .video-result.show { display: block; animation: fadeSlideUp 0.4s both; }
+
+    .video-thumbnail-wrap {
+      position: relative;
+      border-radius: var(--radius) var(--radius) 0 0;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      background: #000;
+    }
+
+    .video-thumbnail-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    .thumb-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
+    }
+
+    .thumb-badge {
+      position: absolute;
+      top: 12px; left: 12px;
+    }
+
+    .thumb-duration {
+      position: absolute;
+      bottom: 12px; right: 12px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      color: #fff;
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .video-info { padding: 22px; background: var(--surface); border-radius: 0 0 var(--radius) var(--radius); border: 1px solid var(--border); border-top: none; }
+
+    .video-title { font-size: 1rem; font-weight: 600; margin-bottom: 5px; }
+    .video-uploader { font-size: 0.8rem; color: var(--muted); margin-bottom: 14px; }
+
+    .video-meta { display: flex; gap: 16px; font-size: 0.78rem; color: var(--muted); margin-bottom: 16px; flex-wrap: wrap; }
+
+    .hashtag-cloud { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+    .hashtag-chip {
+      padding: 4px 11px;
+      border-radius: 99px;
+      background: var(--brand-dim);
+      color: #8b9bff;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .hashtag-chip:hover { background: rgba(88,101,249,0.3); }
+
+    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .action-grid .btn-full { grid-column: 1 / -1; }
+
+    /* Download progress */
+    .dl-progress {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 18px;
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .dl-progress.show { display: block; }
+    .dl-progress-bar-wrap { height: 3px; background: var(--surface); border-radius: 99px; overflow: hidden; margin-top: 8px; }
+    .dl-progress-bar { height: 100%; background: linear-gradient(90deg, var(--brand), var(--purple), var(--cyan)); background-size: 200% 100%; animation: progressShimmer 1.5s linear infinite; width: 0%; transition: width 0.5s ease; border-radius: 99px; }
+    @keyframes progressShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* Share row */
+    .share-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+
+    /* Supported platform grid */
+    .supported-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 40px; }
+    .supported-item {
+      padding: 18px 12px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      text-align: center;
+      transition: all 0.2s;
+      cursor: default;
+    }
+    .supported-item:hover { border-color: var(--border2); transform: translateY(-3px); }
+    .supported-item-icon { font-size: 1.8rem; margin-bottom: 6px; }
+    .supported-item-name { font-size: 0.75rem; font-weight: 500; color: var(--muted); }
+
+    /* ═══════════════════════════════════════════════════
+       CAPTION OPTIMIZER PAGE
+    ═══════════════════════════════════════════════════ */
+    .optimizer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    .tone-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .tone-btn {
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+    .tone-btn:hover { border-color: var(--border2); }
+    .tone-btn.active { border-color: var(--brand); background: var(--brand-dim); }
+    .tone-btn-label { font-family: var(--font-display); font-weight: 600; font-size: 0.85rem; color: var(--text); }
+    .tone-btn-desc  { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+    .platform-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .platform-tag {
+      padding: 5px 13px;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--muted);
+    }
+    .platform-tag:hover { border-color: var(--border2); color: var(--text); }
+    .platform-tag.active { border-color: var(--brand); background: var(--brand-dim); color: #8b9bff; }
+
+    .result-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 26px; min-height: 480px; }
+
+    .result-empty {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100%; min-height: 400px; text-align: center; color: var(--muted);
+    }
+    .result-empty-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.4; }
+
+    .score-ring-wrap { text-align: center; margin-bottom: 20px; }
+    .score-ring {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-weight: 800; font-size: 1.5rem;
+      position: relative;
+      margin-bottom: 6px;
+    }
+    .score-label { font-size: 0.78rem; color: var(--muted); }
+
+    .result-tabs { display: flex; margin-bottom: 16px; background: var(--surface2); border-radius: var(--radius-sm); padding: 4px; gap: 4px; }
+    .result-tab {
+      flex: 1; padding: 8px; border-radius: 7px; font-family: var(--font-display);
+      font-size: 0.8rem; font-weight: 600; cursor: pointer; border: none;
+      background: transparent; color: var(--muted); transition: all 0.15s;
+    }
+    .result-tab.active { background: var(--brand); color: #fff; box-shadow: 0 2px 8px var(--brand-dim); }
+
+    .result-text {
+      font-size: 0.875rem; line-height: 1.75;
+      white-space: pre-wrap;
+      color: var(--text);
+      margin-bottom: 16px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .suggestions-list { list-style: none; space-y: 6px; }
+    .suggestion-item { font-size: 0.8rem; color: var(--muted); padding: 5px 0; display: flex; gap: 8px; }
+
+    /* ═══════════════════════════════════════════════════
+       DASHBOARD PAGE
+    ═══════════════════════════════════════════════════ */
+    .stats-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+
+    .stat-card {
+      padding: 22px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+
+    .stat-card-icon { font-size: 1.5rem; margin-bottom: 10px; }
+    .stat-card-value { font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+    .stat-card-label { font-size: 0.78rem; color: var(--muted); }
+
+    .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    .dash-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; }
+    .dash-panel-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 18px; }
+
+    .activity-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .activity-text { flex: 1; min-width: 0; }
+    .activity-title { font-size: 0.85rem; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .activity-meta  { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+    .platform-bar-list { display: flex; flex-direction: column; gap: 12px; }
+    .platform-bar-item {}
+    .platform-bar-header { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.82rem; }
+    .platform-bar-track { height: 5px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+    .platform-bar-fill  { height: 100%; background: linear-gradient(90deg, var(--brand), var(--purple)); border-radius: 99px; transition: width 1s cubic-bezier(0.34,1.56,0.64,1); }
+
+    /* ═══════════════════════════════════════════════════
+       LIBRARY PAGE
+    ═══════════════════════════════════════════════════ */
+    .library-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
+    .search-wrap { position: relative; flex: 1; min-width: 220px; }
+    .search-wrap input { padding-left: 38px; }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.9rem; pointer-events: none; }
+
+    .filter-tabs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px; }
+    .filter-tab { padding: 7px 14px; border-radius: 7px; font-size: 0.8rem; font-family: var(--font-display); font-weight: 600; color: var(--muted); background: none; border: none; cursor: pointer; transition: all 0.15s; }
+    .filter-tab.active { background: var(--brand); color: #fff; }
+    .filter-tab:hover:not(.active) { color: var(--text); }
+
+    .lib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+
+    .lib-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all 0.2s; }
+    .lib-card:hover { border-color: var(--border2); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+
+    .lib-thumb { aspect-ratio: 16/9; background: var(--surface2); overflow: hidden; position: relative; }
+    .lib-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .lib-thumb-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+
+    .lib-card-body { padding: 14px; }
+    .lib-card-title { font-size: 0.85rem; font-weight: 600; line-height: 1.3; margin-bottom: 8px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .lib-card-meta  { display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; color: var(--muted); }
+
+    .hashtag-bank { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; }
+    .hashtag-bank-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+    .hashtag-bank-grid { display: flex; flex-wrap: wrap; gap: 7px; }
+
+    /* ═══════════════════════════════════════════════════
+       AUTH PAGES
+    ═══════════════════════════════════════════════════ */
+    .auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 80px 24px; }
+    .auth-card { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 40px; }
+
+    .auth-logo { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 28px; cursor: pointer; }
+    .auth-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 5px; }
+    .auth-sub   { font-size: 0.875rem; color: var(--muted); margin-bottom: 28px; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; font-family: var(--font-display); }
+
+    .input-toggle-wrap { position: relative; }
+    .input-toggle-wrap .input { padding-right: 44px; }
+    .input-toggle-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.78rem; font-family: var(--font-display); font-weight: 600; }
+    .input-toggle-btn:hover { color: var(--text); }
+
+    .auth-divider { text-align: center; font-size: 0.82rem; color: var(--muted); margin: 20px 0; }
+    .auth-link { color: var(--brand); cursor: pointer; text-decoration: none; font-weight: 600; }
+    .auth-link:hover { text-decoration: underline; }
+
+    .perks-list { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+    .perk-item { display: flex; align-items: center; gap: 9px; font-size: 0.82rem; color: var(--muted); }
+    .perk-check { color: var(--green); font-size: 0.9rem; }
+
+    /* ═══════════════════════════════════════════════════
+       TOAST NOTIFICATIONS
+    ═══════════════════════════════════════════════════ */
+    #toast-container {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 9999;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+
+    .toast {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      font-size: 0.875rem;
+      animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+      max-width: 320px;
+      backdrop-filter: blur(12px);
+    }
+
+    .toast.out { animation: toastOut 0.3s ease both; }
+    .toast-success .toast-icon { color: var(--green); }
+    .toast-error   .toast-icon { color: var(--red); }
+    .toast-info    .toast-icon { color: var(--brand); }
+
+    @keyframes toastIn  { from { opacity: 0; transform: translateX(20px) scale(0.95); } to { opacity: 1; transform: translateX(0) scale(1); } }
+    @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(20px); } }
+
+    /* ═══════════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════════ */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      margin-top: 40px;
+      position: relative; z-index: 1;
+    }
+
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+    .footer-links { display: flex; gap: 6px; flex-wrap: wrap; }
+    .footer-copy  { font-size: 0.78rem; color: var(--muted); }
+
+    /* ═══════════════════════════════════════════════════
+       UTILITIES
+    ═══════════════════════════════════════════════════ */
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-2 { gap: 8px; }
+    .gap-3 { gap: 12px; }
+    .mt-2 { margin-top: 8px; }
+    .mt-3 { margin-top: 12px; }
+    .mt-4 { margin-top: 16px; }
+    .mb-3 { margin-bottom: 12px; }
+    .mb-4 { margin-bottom: 16px; }
+    .w-full { width: 100%; }
+    .text-muted { color: var(--muted); }
+    .text-sm { font-size: 0.875rem; }
+    .text-xs { font-size: 0.75rem; }
+    .font-bold { font-weight: 700; }
+
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ═══════════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .optimizer-grid { grid-template-columns: 1fr; }
+      .stats-cards    { grid-template-columns: 1fr 1fr; }
+      .dash-grid      { grid-template-columns: 1fr; }
+      .supported-grid { grid-template-columns: repeat(4, 1fr); }
+      .nav-links, .nav-actions .btn-primary { display: none; }
+      .hamburger { display: flex; }
+      .stats-bar { grid-template-columns: 1fr; }
+      .action-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .stats-cards    { grid-template-columns: 1fr; }
+      .supported-grid { grid-template-columns: repeat(2, 1fr); }
+      .cta-banner     { padding: 32px 24px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ══════════════════════════════════════════════
+       NAVBAR
+  ══════════════════════════════════════════════ -->
+  <nav id="navbar">
+    <div class="container nav-inner">
+      <div class="nav-logo" onclick="navigate('home')">
+        <div class="nav-logo-icon">S</div>
+        <span class="nav-logo-text">Social<span>Hub</span></span>
+      </div>
+
+      <div class="nav-links">
+        <button class="nav-link" onclick="navigate('downloader')">Downloader</button>
+        <button class="nav-link" onclick="navigate('optimizer')">Optimizer</button>
+        <button class="nav-link" onclick="navigate('library')">Library</button>
+        <button class="nav-link" id="nav-dashboard" onclick="navigate('dashboard')" style="display:none">Dashboard</button>
+      </div>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+        <div id="nav-auth-btns">
+          <button class="btn btn-ghost" onclick="navigate('login')">Log in</button>
+          <button class="btn btn-primary" onclick="navigate('signup')">Get started →</button>
+        </div>
+        <div id="nav-user-btns" style="display:none">
+          <button class="btn btn-ghost" id="nav-username" onclick="navigate('dashboard')"></button>
+          <button class="btn btn-ghost" onclick="logoutUser()">Sign out</button>
+        </div>
+        <button class="hamburger btn-icon" onclick="toggleMobileMenu()">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" style="display:none; position:fixed; top:62px; left:0; right:0; z-index:999; background:var(--surface); border-bottom:1px solid var(--border); padding:16px 24px; flex-direction:column; gap:4px;">
+    <button class="nav-link w-full" style="text-align:left" onclick="navigate('downloader'); closeMobileMenu()">⬇️ Downloader</button>
+    <button class="nav-link w-full" style="text-align:left" onclick="navigate('optimizer');  closeMobileMenu()">✍️ Optimizer</button>
+    <button class="nav-link w-full" style="text-align:left" onclick="navigate('library');    closeMobileMenu()">📚 Library</button>
+    <button class="nav-link w-full" style="text-align:left" onclick="navigate('dashboard');  closeMobileMenu()">📊 Dashboard</button>
+    <div style="padding-top:12px; border-top:1px solid var(--border); display:flex; gap:8px;">
+      <button class="btn btn-secondary w-full" onclick="navigate('login');  closeMobileMenu()">Log in</button>
+      <button class="btn btn-primary  w-full" onclick="navigate('signup'); closeMobileMenu()">Sign up</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       TOAST CONTAINER
+  ══════════════════════════════════════════════ -->
+  <div id="toast-container"></div>
+
+  <!-- ══════════════════════════════════════════════
+       PAGE: HOME
+  ══════════════════════════════════════════════ -->
+  <div id="page-home" class="page active">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot"></span>
+          100% Free · Open Source · No API Keys
+        </div>
+        <h1 class="hero-title">
+          Your Social Media<br>
+          <span class="gradient-text">Command Center</span>
+        </h1>
+        <p class="hero-sub">
+          Download videos, extract captions & hashtags, optimize your content with NLP,
+          and share across 8 platforms — all in one free tool.
+        </p>
+        <div class="hero-cta">
+          <button class="btn btn-primary btn-lg" onclick="navigate('downloader')">
+            ⬇️ Start Downloading
+          </button>
+          <button class="btn btn-secondary btn-lg" onclick="navigate('optimizer')">
+            ✍️ Optimize Captions
+          </button>
+        </div>
+
+        <div class="platform-grid">
+          <div class="platform-pill">▶️ YouTube</div>
+          <div class="platform-pill">📷 Instagram</div>
+          <div class="platform-pill">🎵 TikTok</div>
+          <div class="platform-pill">🐦 Twitter / X</div>
+          <div class="platform-pill">👥 Facebook</div>
+          <div class="platform-pill">💼 LinkedIn</div>
+          <div class="platform-pill">🤖 Reddit</div>
+          <div class="platform-pill">❓ Quora</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <!-- Stats -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-number">8+</div>
+          <div class="stat-label">Supported Platforms</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Caption Tones</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Free Forever</div>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <section class="features-section">
+        <div class="section-header">
+          <span class="section-label">Everything You Need</span>
+          <h2 class="section-title">One platform, <span class="gradient-text">all your tools</span></h2>
+          <p class="section-desc">No subscriptions. No API keys. No rate limits. Just tools that work.</p>
+        </div>
+
+        <div class="features-grid">
+          <div class="glass-card feature-card" onclick="navigate('downloader')">
+            <div class="feature-icon" style="background:rgba(88,101,249,0.15);">⬇️</div>
+            <h3>Video Downloader</h3>
+            <p>Paste any URL and instantly download the video, thumbnail, caption, and hashtags. Powered by yt-dlp.</p>
+            <span class="feature-arrow">Get video →</span>
+          </div>
+          <div class="glass-card feature-card" onclick="navigate('optimizer')">
+            <div class="feature-icon" style="background:rgba(168,85,247,0.15);">✍️</div>
+            <h3>Caption Optimizer</h3>
+            <p>Rule-based NLP engine transforms plain text into polished, engaging captions with 5 tone presets.</p>
+            <span class="feature-arrow">Optimize now →</span>
+          </div>
+          <div class="glass-card feature-card" onclick="navigate('library')">
+            <div class="feature-icon" style="background:rgba(34,211,238,0.15);">📚</div>
+            <h3>Content Library</h3>
+            <p>Organize all your downloaded videos, captions, and hashtags in one searchable library.</p>
+            <span class="feature-arrow">View library →</span>
+          </div>
+          <div class="glass-card feature-card" onclick="navigate('dashboard')">
+            <div class="feature-icon" style="background:rgba(16,185,129,0.15);">📊</div>
+            <h3>Analytics Dashboard</h3>
+            <p>Track downloads, caption history, and content performance across all your platforms.</p>
+            <span class="feature-arrow">Open dashboard →</span>
+          </div>
+          <div class="glass-card feature-card" onclick="navigate('downloader')">
+            <div class="feature-icon" style="background:rgba(245,158,11,0.15);">🔗</div>
+            <h3>Smart Link Detector</h3>
+            <p>Paste any link and the platform is auto-detected instantly. Works with 8 major platforms.</p>
+            <span class="feature-arrow">Try it →</span>
+          </div>
+          <div class="glass-card feature-card" onclick="navigate('downloader')">
+            <div class="feature-icon" style="background:rgba(236,72,153,0.15);">🚀</div>
+            <h3>One-Click Share</h3>
+            <p>Share content directly to Facebook, Twitter, LinkedIn, and Reddit via native share links.</p>
+            <span class="feature-arrow">Share content →</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA banner -->
+      <div class="cta-banner">
+        <h2>Ready to get started?</h2>
+        <p>Create a free account to save downloads, captions, and history.</p>
+        <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+          <button class="btn btn-primary btn-lg" onclick="navigate('signup')">Create Free Account →</button>
+          <button class="btn btn-secondary btn-lg" onclick="navigate('downloader')">Try Without Account</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container footer-inner">
+        <div class="nav-logo" style="cursor:pointer" onclick="navigate('home')">
+          <div class="nav-logo-icon" style="width:28px;height:28px;font-size:0.78rem;">S</div>
+          <span class="nav-logo-text" style="font-size:0.95rem;">Social<span>Hub</span></span>
+          <span class="footer-copy" style="margin-left:8px;">— Free & Open Source</span>
+        </div>
+        <div class="footer-links">
+          <button class="btn btn-ghost" style="font-size:0.8rem;" onclick="navigate('downloader')">Downloader</button>
+          <button class="btn btn-ghost" style="font-size:0.8rem;" onclick="navigate('optimizer')">Optimizer</button>
+          <button class="btn btn-ghost" style="font-size:0.8rem;" onclick="navigate('dashboard')">Dashboard</button>
+          <button class="btn btn-ghost" style="font-size:0.8rem;" onclick="navigate('library')">Library</button>
+        </div>
+        <span class="footer-copy">Built with yt-dlp · FastAPI · Next.js · MIT License</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PAGE: DOWNLOADER
+  ══════════════════════════════════════════════ -->
+  <div id="page-downloader" class="page">
+    <div class="page-header container-sm">
+      <span class="section-label">Free · No Limits · 8 Platforms</span>
+      <h1 class="page-title">Video <span class="gradient-text">Downloader</span></h1>
+      <p class="page-desc">Paste a URL from any supported platform. Download the video, caption, hashtags, and thumbnail instantly.</p>
+    </div>
+
+    <div class="container-sm">
+      <!-- URL Input -->
+      <div class="url-drop-zone" id="drop-zone"
+        ondragover="event.preventDefault(); this.classList.add('drag-over')"
+        ondragleave="this.classList.remove('drag-over')"
+        ondrop="handleDrop(event)">
+
+        <p class="section-label mb-3">🔗 Paste or Drop Your URL</p>
+
+        <div class="url-input-wrap">
+          <span style="font-size:1.1rem; flex-shrink:0; color:var(--muted);" id="platform-icon">🔗</span>
+          <input type="url" id="url-input"
+            placeholder="https://youtube.com/watch?v=... or instagram.com/p/..."
+            oninput="onURLChange(this.value)"
+            onkeydown="if(event.key==='Enter') analyzeURL()"
+          />
+          <button class="btn btn-icon" id="url-clear-btn" style="display:none" onclick="clearURL()">✕</button>
+        </div>
+
+        <div class="platform-detected" id="platform-detected">
+          <span class="platform-detected-dot"></span>
+          Detected: <strong id="platform-name" style="color:var(--text);margin-left:4px;"></strong>
+        </div>
+
+        <div class="mt-3">
+          <button class="btn btn-primary w-full btn-lg" id="analyze-btn" onclick="analyzeURL()" disabled>
+            ⚡ Analyze URL
+          </button>
+        </div>
+
+        <p style="text-align:center; font-size:0.75rem; color:var(--muted); margin-top:12px;">
+          Drag & drop a link, or paste it above. Only public content supported.
+        </p>
+      </div>
+
+      <!-- Progress -->
+      <div class="dl-progress" id="dl-progress">
+        <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.85rem;">
+          <span>⚡ <span id="dl-status-text">Analyzing...</span></span>
+          <span class="badge" id="dl-status-badge"></span>
+        </div>
+        <div class="dl-progress-bar-wrap">
+          <div class="dl-progress-bar" id="dl-progress-bar" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Video Result -->
+      <div class="video-result" id="video-result">
+        <div class="video-thumbnail-wrap">
+          <img id="result-thumb" src="" alt="Thumbnail" />
+          <div class="thumb-overlay"></div>
+          <div class="thumb-badge">
+            <span class="badge badge-brand" id="result-platform"></span>
+          </div>
+          <span class="thumb-duration" id="result-duration"></span>
+        </div>
+
+        <div class="video-info">
+          <h3 class="video-title" id="result-title">Untitled</h3>
+          <p class="video-uploader" id="result-uploader"></p>
+
+          <div class="video-meta">
+            <span id="result-views"></span>
+            <span id="result-dur-text"></span>
+          </div>
+
+          <div class="hashtag-cloud" id="result-hashtags"></div>
+
+          <div class="action-grid">
+            <button class="btn btn-primary" onclick="startDownload()">
+              ⬇️ Download Video
+            </button>
+            <button class="btn btn-secondary" onclick="copyCaption()">
+              📋 Copy Caption
+            </button>
+            <button class="btn btn-secondary btn-full" onclick="copyHashtags()">
+              🏷️ Copy All Hashtags
+            </button>
+          </div>
+
+          <!-- Share -->
+          <p class="section-label mt-3 mb-2">Share</p>
+          <div class="share-row" id="share-row"></div>
+        </div>
+      </div>
+
+      <!-- Supported Platforms -->
+      <div id="supported-section">
+        <p class="section-label" style="text-align:center; margin-top:40px; margin-bottom:18px;">Supported Platforms</p>
+        <div class="supported-grid">
+          <div class="supported-item"><div class="supported-item-icon">▶️</div><div class="supported-item-name">YouTube</div></div>
+          <div class="supported-item"><div class="supported-item-icon">📷</div><div class="supported-item-name">Instagram</div></div>
+          <div class="supported-item"><div class="supported-item-icon">🎵</div><div class="supported-item-name">TikTok</div></div>
+          <div class="supported-item"><div class="supported-item-icon">🐦</div><div class="supported-item-name">Twitter/X</div></div>
+          <div class="supported-item"><div class="supported-item-icon">👥</div><div class="supported-item-name">Facebook</div></div>
+          <div class="supported-item"><div class="supported-item-icon">💼</div><div class="supported-item-name">LinkedIn</div></div>
+          <div class="supported-item"><div class="supported-item-icon">🤖</div><div class="supported-item-name">Reddit</div></div>
+          <div class="supported-item"><div class="supported-item-icon">❓</div><div class="supported-item-name">Quora</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="height:60px;"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PAGE: OPTIMIZER
+  ══════════════════════════════════════════════ -->
+  <div id="page-optimizer" class="page">
+    <div class="page-header container">
+      <span class="section-label">NLP-Powered · No API Key Required</span>
+      <h1 class="page-title">Caption <span class="gradient-text">Optimizer</span></h1>
+      <p class="page-desc">Transform plain text into engaging captions with tone selection, smart hashtags, and engagement boosters.</p>
+    </div>
+
+    <div class="container">
+      <div class="optimizer-grid">
+        <!-- Left: Input -->
+        <div style="display:flex; flex-direction:column; gap:18px;">
+
+          <!-- Caption input -->
+          <div class="glass-card" style="padding:22px;">
+            <p class="section-label mb-3">Your Caption</p>
+            <textarea class="textarea" id="caption-input"
+              placeholder="Paste or type your caption here...&#10;&#10;Example: Just finished my morning workout. Feeling amazing and ready to take on the day."
+            ></textarea>
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--muted); margin-top:8px;">
+              <span id="caption-counter">0 chars · 0 words</span>
+              <button class="btn btn-ghost" style="padding:2px 8px; font-size:0.75rem;" onclick="document.getElementById('caption-input').value=''; updateCounter()">Clear</button>
+            </div>
+          </div>
+
+          <!-- Tone selector -->
+          <div class="glass-card" style="padding:22px;">
+            <p class="section-label mb-3">Tone</p>
+            <div class="tone-grid" id="tone-grid">
+              <button class="tone-btn active" data-tone="professional" onclick="selectTone(this)">
+                <div class="tone-btn-label">💼 Professional</div>
+                <div class="tone-btn-desc">Polished, business-ready</div>
+              </button>
+              <button class="tone-btn" data-tone="viral" onclick="selectTone(this)">
+                <div class="tone-btn-label">🔥 Viral</div>
+                <div class="tone-btn-desc">Hook-heavy, shareable</div>
+              </button>
+              <button class="tone-btn" data-tone="marketing" onclick="selectTone(this)">
+                <div class="tone-btn-label">🚀 Marketing</div>
+                <div class="tone-btn-desc">Promo & sales focus</div>
+              </button>
+              <button class="tone-btn" data-tone="storytelling" onclick="selectTone(this)">
+                <div class="tone-btn-label">📖 Storytelling</div>
+                <div class="tone-btn-desc">Narrative & emotional</div>
+              </button>
+              <button class="tone-btn" data-tone="casual" onclick="selectTone(this)" style="grid-column:1/-1">
+                <div class="tone-btn-label">😎 Casual</div>
+                <div class="tone-btn-desc">Relaxed & authentic</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Platform -->
+          <div class="glass-card" style="padding:22px;">
+            <p class="section-label mb-3">Platform (optional)</p>
+            <div class="platform-tags" id="platform-tags">
+              <button class="platform-tag" data-platform="instagram" onclick="togglePlatformTag(this)">📷 Instagram</button>
+              <button class="platform-tag" data-platform="twitter"   onclick="togglePlatformTag(this)">🐦 Twitter</button>
+              <button class="platform-tag" data-platform="linkedin"  onclick="togglePlatformTag(this)">💼 LinkedIn</button>
+              <button class="platform-tag" data-platform="tiktok"    onclick="togglePlatformTag(this)">🎵 TikTok</button>
+              <button class="platform-tag" data-platform="facebook"  onclick="togglePlatformTag(this)">👥 Facebook</button>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-lg w-full" id="optimize-btn" onclick="optimizeCaption()">
+            ✨ Optimize Caption
+          </button>
+        </div>
+
+        <!-- Right: Result -->
+        <div>
+          <div class="result-panel" id="result-panel">
+            <div class="result-empty" id="result-empty">
+              <div class="result-empty-icon">✍️</div>
+              <p style="font-weight:600; font-size:1rem; color:var(--text); margin-bottom:8px;">Your result will appear here</p>
+              <p style="font-size:0.85rem;">Enter a caption, pick a tone, and hit Optimize.</p>
+            </div>
+            <div id="result-content" style="display:none;">
+              <!-- Score ring -->
+              <div class="score-ring-wrap">
+                <div class="score-ring" id="score-ring">
+                  <span id="score-number">0</span>
+                </div>
+                <div class="score-label">/100 engagement score</div>
+                <div style="display:flex; gap:8px; justify-content:center; margin-top:8px; flex-wrap:wrap;">
+                  <span class="badge badge-brand" id="result-tone-badge"></span>
+                  <span class="badge badge-cyan" id="result-stats-badge"></span>
+                </div>
+              </div>
+
+              <!-- Tabs -->
+              <div class="result-tabs">
+                <button class="result-tab active" data-tab="optimized" onclick="switchResultTab(this)">✨ Optimized</button>
+                <button class="result-tab" data-tab="original" onclick="switchResultTab(this)">📄 Original</button>
+              </div>
+
+              <div class="result-text" id="result-text-content"></div>
+
+              <button class="btn btn-secondary w-full mt-2" onclick="copyOptimizedCaption()">
+                📋 Copy Caption
+              </button>
+
+              <!-- Hashtags -->
+              <div id="result-hashtags-section" style="margin-top:20px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                  <p class="section-label">Suggested Hashtags</p>
+                  <button class="btn btn-ghost" style="font-size:0.75rem; padding:4px 10px;" onclick="copyResultHashtags()">Copy all →</button>
+                </div>
+                <div class="hashtag-cloud" id="result-hashtag-cloud"></div>
+              </div>
+
+              <!-- Suggestions -->
+              <div id="result-suggestions-section" style="margin-top:18px; padding-top:18px; border-top:1px solid var(--border);">
+                <p class="section-label mb-2">💡 Suggestions</p>
+                <ul class="suggestions-list" id="result-suggestions-list"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="height:60px;"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PAGE: DASHBOARD
+  ══════════════════════════════════════════════ -->
+  <div id="page-dashboard" class="page">
+    <div class="page-header container">
+      <span class="section-label">Your Content Overview</span>
+      <h1 class="page-title" id="dash-welcome">Welcome back 👋</h1>
+      <div style="display:flex; gap:12px; justify-content:center; margin-top:20px; flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="navigate('downloader')">⬇️ New Download</button>
+        <button class="btn btn-secondary" onclick="navigate('optimizer')">✍️ Optimize Caption</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Stat cards -->
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-card-icon">⬇️</div>
+          <div class="stat-card-value" id="stat-downloads">0</div>
+          <div class="stat-card-label">Downloads</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">✍️</div>
+          <div class="stat-card-value" id="stat-captions">0</div>
+          <div class="stat-card-label">Captions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">🏷️</div>
+          <div class="stat-card-value" id="stat-hashtags">0</div>
+          <div class="stat-card-label">Unique Hashtags</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">🌐</div>
+          <div class="stat-card-value" id="stat-platforms">0</div>
+          <div class="stat-card-label">Platforms Used</div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <!-- Recent downloads -->
+        <div class="dash-panel">
+          <div class="dash-panel-title">📥 Recent Downloads</div>
+          <div id="recent-downloads-list">
+            <p class="text-sm text-muted" id="no-downloads-msg">No downloads yet. <button class="btn btn-ghost" style="display:inline;padding:2px 0;color:var(--brand);font-size:0.85rem;" onclick="navigate('downloader')">Start here →</button></p>
+          </div>
+        </div>
+
+        <!-- Platform breakdown -->
+        <div class="dash-panel">
+          <div class="dash-panel-title">📊 Downloads by Platform</div>
+          <div id="platform-bars">
+            <p class="text-sm text-muted" id="no-platform-msg">Download a video to see stats here.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent captions -->
+      <div class="dash-panel" style="margin-top:20px;">
+        <div class="dash-panel-title">✍️ Recent Captions</div>
+        <div id="recent-captions-list">
+          <p class="text-sm text-muted" id="no-captions-msg">No captions saved yet. <button class="btn btn-ghost" style="display:inline;padding:2px 0;color:var(--brand);font-size:0.85rem;" onclick="navigate('optimizer')">Try the optimizer →</button></p>
+        </div>
+      </div>
+    </div>
+    <div style="height:60px;"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PAGE: LIBRARY
+  ══════════════════════════════════════════════ -->
+  <div id="page-library" class="page">
+    <div class="page-header container">
+      <span class="section-label">Your Content</span>
+      <h1 class="page-title">Content <span class="gradient-text">Library</span></h1>
+    </div>
+
+    <div class="container">
+      <!-- Controls -->
+      <div class="library-header">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="input" placeholder="Search videos, captions, hashtags..." id="lib-search" oninput="filterLibrary(this.value)" />
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-tab active" data-filter="all"      onclick="setLibFilter(this)">All</button>
+          <button class="filter-tab"        data-filter="videos"   onclick="setLibFilter(this)">Videos</button>
+          <button class="filter-tab"        data-filter="captions" onclick="setLibFilter(this)">Captions</button>
+          <button class="filter-tab"        data-filter="hashtags" onclick="setLibFilter(this)">Hashtags</button>
+        </div>
+        <button class="btn btn-primary" onclick="navigate('downloader')">+ Add Video</button>
+      </div>
+
+      <!-- Videos -->
+      <div id="lib-videos-section">
+        <h2 style="font-size:1rem; font-weight:700; margin-bottom:14px;">📹 Videos <span class="text-muted text-sm" id="lib-video-count"></span></h2>
+        <div class="lib-grid" id="lib-videos-grid">
+          <div class="text-sm text-muted" id="lib-no-videos">No videos yet. <button class="btn btn-ghost" style="display:inline;padding:2px 0;color:var(--brand);font-size:0.85rem;" onclick="navigate('downloader')">Download one →</button></div>
+        </div>
+      </div>
+
+      <!-- Captions -->
+      <div id="lib-captions-section" style="margin-top:40px;">
+        <h2 style="font-size:1rem; font-weight:700; margin-bottom:14px;">✍️ Captions <span class="text-muted text-sm" id="lib-caption-count"></span></h2>
+        <div id="lib-captions-list">
+          <div class="text-sm text-muted" id="lib-no-captions">No captions yet. <button class="btn btn-ghost" style="display:inline;padding:2px 0;color:var(--brand);font-size:0.85rem;" onclick="navigate('optimizer')">Optimize one →</button></div>
+        </div>
+      </div>
+
+      <!-- Hashtag bank -->
+      <div id="lib-hashtags-section" style="margin-top:40px;">
+        <div class="hashtag-bank">
+          <div class="hashtag-bank-title">
+            <span>🏷️ Hashtag Bank</span>
+            <button class="btn btn-ghost" style="font-size:0.8rem;" onclick="copyAllHashtags()">Copy all →</button>
+          </div>
+          <div class="hashtag-bank-grid" id="lib-hashtags-cloud">
+            <span class="text-sm text-muted">Hashtags from optimized captions will appear here.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="height:60px;"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PAGE: LOGIN
+  ══════════════════════════════════════════════ -->
+  <div id="page-login" class="page">
+    <div class="auth-page">
+      <div class="auth-card">
+        <div class="auth-logo" onclick="navigate('home')">
+          <div class="nav-logo-icon">S</div>
+          <span class="nav-logo-text">Social<span>Hub</span></span>
+        </div>
+        <h1 class="auth-title">Welcome back</h1>
+        <p class="auth-sub">Log in to your free SocialHub account</p>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="input" id="login-email" placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-toggle-wrap">
+            <input type="password" class="input" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginUser()" />
+            <button class="input-toggle-btn" onclick="togglePwd('login-password', this)">Show</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg w-full mt-3" id="login-btn" onclick="loginUser()">
+          Log In →
+        </button>
+
+        <div class="auth-divider">
+          Don't have an account? <span class="auth-link" onclick="navigate('signup')">Sign up free →</span>
+        </div>
+
+        <div style="padding-top:14px; border-top:1px solid var(--border); text-align:center;">
+          <button class="btn btn-ghost" style="font-size:0.82rem; color:var(--brand);" onclick="navigate('downloader')">
+            Continue without account →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PAGE: SIGNUP
+  ══════════════════════════════════════════════ -->
+  <div id="page-signup" class="page">
+    <div class="auth-page">
+      <div class="auth-card">
+        <div class="auth-logo" onclick="navigate('home')">
+          <div class="nav-logo-icon">S</div>
+          <span class="nav-logo-text">Social<span>Hub</span></span>
+        </div>
+        <h1 class="auth-title">Create free account</h1>
+        <p class="auth-sub">No credit card required. No limits.</p>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="input" id="signup-email" placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" class="input" id="signup-username" placeholder="coolcreator" minlength="3" maxlength="30" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-toggle-wrap">
+            <input type="password" class="input" id="signup-password" placeholder="Min. 6 characters" onkeydown="if(event.key==='Enter')registerUser()" />
+            <button class="input-toggle-btn" onclick="togglePwd('signup-password', this)">Show</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg w-full mt-3" id="signup-btn" onclick="registerUser()">
+          Create Account →
+        </button>
+
+        <div class="perks-list">
+          <div class="perk-item"><span class="perk-check">✓</span> Completely free — no subscriptions</div>
+          <div class="perk-item"><span class="perk-check">✓</span> Stored locally — your data stays yours</div>
+          <div class="perk-item"><span class="perk-check">✓</span> Open source — verify it yourself</div>
+        </div>
+
+        <div class="auth-divider">
+          Already have an account? <span class="auth-link" onclick="navigate('login')">Log in →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════════════ -->
+  <script>
+  'use strict';
+
+  /* ═══════════════════════════════════════════════
+     APP STATE
+  ═══════════════════════════════════════════════ */
+  const API = (window.SOCIALHUB_API_URL || 'http://localhost:8000');
+
+  const state = {
+    currentPage:      'home',
+    currentUser:      JSON.parse(localStorage.getItem('sh_user') || 'null'),
+    token:            localStorage.getItem('sh_token') || null,
+    currentTone:      'professional',
+    currentPlatform:  null,
+    currentTab:       'optimized',
+    optimizerResult:  null,
+    videoInfo:        null,
+    downloads:        JSON.parse(localStorage.getItem('sh_downloads') || '[]'),
+    captions:         JSON.parse(localStorage.getItem('sh_captions') || '[]'),
+    libFilter:        'all',
+    libSearch:        '',
+  };
+
+  const PLATFORM_MAP = {
+    youtube:   { name: 'YouTube',   icon: '▶️', color: '#ff0000' },
+    instagram: { name: 'Instagram', icon: '📷', color: '#e1306c' },
+    tiktok:    { name: 'TikTok',    icon: '🎵', color: '#69c9d0' },
+    twitter:   { name: 'Twitter/X', icon: '🐦', color: '#1da1f2' },
+    facebook:  { name: 'Facebook',  icon: '👥', color: '#1877f2' },
+    linkedin:  { name: 'LinkedIn',  icon: '💼', color: '#0a66c2' },
+    reddit:    { name: 'Reddit',    icon: '🤖', color: '#ff4500' },
+    quora:     { name: 'Quora',     icon: '❓', color: '#b92b27' },
+  };
+
+  /* ═══════════════════════════════════════════════
+     ROUTING
+  ═══════════════════════════════════════════════ */
+  function navigate(page) {
+    // Auth guard for dashboard/library
+    if ((page === 'dashboard' || page === 'library') && !state.currentUser) {
+      showToast('Please log in to access this page.', 'info');
+      page = 'login';
+    }
+
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById('page-' + page);
+    if (!target) return;
+    target.classList.add('active');
+    state.currentPage = page;
+
+    // Update active nav link
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Page-specific init
+    if (page === 'dashboard') loadDashboard();
+    if (page === 'library')   loadLibrary();
+    if (page === 'optimizer') {
+      document.getElementById('caption-input').addEventListener('input', updateCounter);
+    }
+
+    // Close mobile menu
+    closeMobileMenu();
+  }
+
+  /* ═══════════════════════════════════════════════
+     NAVBAR & THEME
+  ═══════════════════════════════════════════════ */
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  function toggleTheme() {
+    const html  = document.documentElement;
+    const isDark = html.dataset.theme === 'dark';
+    html.dataset.theme = isDark ? 'light' : 'dark';
+    document.querySelector('.theme-toggle').textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('sh_theme', html.dataset.theme);
+  }
+
+  // Restore theme
+  (function() {
+    const saved = localStorage.getItem('sh_theme');
+    if (saved) {
+      document.documentElement.dataset.theme = saved;
+      if (saved === 'light') document.querySelector('.theme-toggle').textContent = '🌙';
+      else document.querySelector('.theme-toggle').textContent = '☀️';
+    }
+  })();
+
+  function toggleMobileMenu() {
+    const m = document.getElementById('mobile-menu');
+    m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+  }
+
+  function closeMobileMenu() {
+    document.getElementById('mobile-menu').style.display = 'none';
+  }
+
+  function updateNavAuth() {
+    const user = state.currentUser;
+    const authBtns = document.getElementById('nav-auth-btns');
+    const userBtns = document.getElementById('nav-user-btns');
+    const dashLink = document.getElementById('nav-dashboard');
+
+    if (user) {
+      authBtns.style.display = 'none';
+      userBtns.style.display = 'flex';
+      dashLink.style.display = 'block';
+      document.getElementById('nav-username').textContent = '👤 ' + user.username;
+    } else {
+      authBtns.style.display = 'flex';
+      userBtns.style.display = 'none';
+      dashLink.style.display = 'none';
+    }
+  }
+
+  updateNavAuth();
+
+  /* ═══════════════════════════════════════════════
+     TOAST SYSTEM
+  ═══════════════════════════════════════════════ */
+  function showToast(message, type = 'success') {
+    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `<span class="toast-icon">${icons[type]}</span><span>${message}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('out');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  /* ═══════════════════════════════════════════════
+     AUTH
+  ═══════════════════════════════════════════════ */
+  function loginUser() {
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    if (!email || !password) { showToast('Please fill all fields', 'error'); return; }
+
+    const btn = document.getElementById('login-btn');
+    btn.innerHTML = '<div class="spinner"></div> Logging in...';
+    btn.disabled = true;
+
+    // Try API first; fall back to local storage mock
+    fetch(API + '/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.access_token) {
+        state.token = data.access_token;
+        state.currentUser = data.user;
+        localStorage.setItem('sh_token', data.access_token);
+        localStorage.setItem('sh_user', JSON.stringify(data.user));
+        updateNavAuth();
+        showToast('Welcome back, ' + data.user.username + '! 👋');
+        navigate('dashboard');
+      } else {
+        throw new Error(data.detail || 'Login failed');
+      }
+    })
+    .catch(() => {
+      // Offline / demo mode: check localStorage users
+      const users = JSON.parse(localStorage.getItem('sh_users') || '[]');
+      const found = users.find(u => u.email === email && u.password === btoa(password));
+      if (found) {
+        const user = { id: found.id, email: found.email, username: found.username };
+        state.currentUser = user;
+        state.token = 'local-' + found.id;
+        localStorage.setItem('sh_token', state.token);
+        localStorage.setItem('sh_user', JSON.stringify(user));
+        updateNavAuth();
+        showToast('Welcome back, ' + user.username + '! 👋');
+        navigate('dashboard');
+      } else {
+        showToast('Invalid email or password', 'error');
+      }
+    })
+    .finally(() => {
+      btn.innerHTML = 'Log In →';
+      btn.disabled = false;
+    });
+  }
+
+  function registerUser() {
+    const email    = document.getElementById('signup-email').value.trim();
+    const username = document.getElementById('signup-username').value.trim();
+    const password = document.getElementById('signup-password').value;
+    if (!email || !username || !password) { showToast('Please fill all fields', 'error'); return; }
+    if (password.length < 6) { showToast('Password must be 6+ characters', 'error'); return; }
+
+    const btn = document.getElementById('signup-btn');
+    btn.innerHTML = '<div class="spinner"></div> Creating account...';
+    btn.disabled = true;
+
+    fetch(API + '/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, username, password }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.access_token) {
+        state.token = data.access_token;
+        state.currentUser = data.user;
+        localStorage.setItem('sh_token', data.access_token);
+        localStorage.setItem('sh_user', JSON.stringify(data.user));
+        updateNavAuth();
+        showToast('Account created! Welcome 🎉');
+        navigate('dashboard');
+      } else {
+        throw new Error(data.detail || 'Registration failed');
+      }
+    })
+    .catch(() => {
+      // Offline demo: save locally
+      const users = JSON.parse(localStorage.getItem('sh_users') || '[]');
+      if (users.find(u => u.email === email)) { showToast('Email already registered', 'error'); return; }
+      if (users.find(u => u.username === username)) { showToast('Username already taken', 'error'); return; }
+      const newUser = { id: Date.now(), email, username, password: btoa(password) };
+      users.push(newUser);
+      localStorage.setItem('sh_users', JSON.stringify(users));
+      const user = { id: newUser.id, email, username };
+      state.currentUser = user;
+      state.token = 'local-' + newUser.id;
+      localStorage.setItem('sh_token', state.token);
+      localStorage.setItem('sh_user', JSON.stringify(user));
+      updateNavAuth();
+      showToast('Account created! Welcome 🎉');
+      navigate('dashboard');
+    })
+    .finally(() => {
+      btn.innerHTML = 'Create Account →';
+      btn.disabled = false;
+    });
+  }
+
+  function logoutUser() {
+    state.currentUser = null;
+    state.token = null;
+    localStorage.removeItem('sh_token');
+    localStorage.removeItem('sh_user');
+    updateNavAuth();
+    showToast('Signed out successfully');
+    navigate('home');
+  }
+
+  function togglePwd(id, btn) {
+    const input = document.getElementById(id);
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    btn.textContent = isHidden ? 'Hide' : 'Show';
+  }
+
+  /* ═══════════════════════════════════════════════
+     PLATFORM DETECTION
+  ═══════════════════════════════════════════════ */
+  function detectPlatform(url) {
+    if (!url) return null;
+    const u = url.toLowerCase();
+    if (u.includes('youtube') || u.includes('youtu.be')) return 'youtube';
+    if (u.includes('instagram'))                          return 'instagram';
+    if (u.includes('tiktok'))                             return 'tiktok';
+    if (u.includes('twitter') || u.includes('x.com'))    return 'twitter';
+    if (u.includes('facebook') || u.includes('fb.watch')) return 'facebook';
+    if (u.includes('linkedin'))                           return 'linkedin';
+    if (u.includes('reddit') || u.includes('redd.it'))   return 'reddit';
+    if (u.includes('quora'))                              return 'quora';
+    return null;
+  }
+
+  function onURLChange(val) {
+    const platform = detectPlatform(val);
+    const detected = document.getElementById('platform-detected');
+    const icon     = document.getElementById('platform-icon');
+    const pName    = document.getElementById('platform-name');
+    const clearBtn = document.getElementById('url-clear-btn');
+    const analyzeBtn = document.getElementById('analyze-btn');
+
+    clearBtn.style.display = val ? 'flex' : 'none';
+    analyzeBtn.disabled    = !val.trim();
+
+    if (platform && PLATFORM_MAP[platform]) {
+      const p = PLATFORM_MAP[platform];
+      icon.textContent = p.icon;
+      pName.textContent = p.name;
+      detected.classList.add('show');
+    } else {
+      icon.textContent = '🔗';
+      detected.classList.remove('show');
+    }
+  }
+
+  function clearURL() {
+    document.getElementById('url-input').value = '';
+    onURLChange('');
+    document.getElementById('video-result').classList.remove('show');
+    document.getElementById('dl-progress').classList.remove('show');
+    document.getElementById('supported-section').style.display = '';
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('drop-zone').classList.remove('drag-over');
+    const text = e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('text/uri-list');
+    if (text) {
+      document.getElementById('url-input').value = text;
+      onURLChange(text);
+    }
+  }
+
+  /* ═══════════════════════════════════════════════
+     URL ANALYZER / DOWNLOADER
+  ═══════════════════════════════════════════════ */
+  function analyzeURL() {
+    const url      = document.getElementById('url-input').value.trim();
+    const platform = detectPlatform(url);
+    if (!url) return;
+
+    const btn = document.getElementById('analyze-btn');
+    btn.innerHTML = '<div class="spinner"></div> Analyzing...';
+    btn.disabled  = true;
+
+    showProgress('Analyzing URL...', 'pending');
+
+    // Try real API
+    fetch(API + '/api/downloads/info', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success && data.data) {
+        showVideoResult({ ...data.data, url });
+      } else {
+        throw new Error(data.detail || 'Analysis failed');
+      }
+    })
+    .catch(() => {
+      // Demo mode: generate mock data
+      if (!platform) {
+        showToast('Could not detect platform. Check the URL.', 'error');
+        hideProgress();
+        btn.innerHTML = '⚡ Analyze URL';
+        btn.disabled = false;
+        return;
+      }
+      showVideoResult(generateMockInfo(url, platform));
+    })
+    .finally(() => {
+      btn.innerHTML = '⚡ Analyze URL';
+      btn.disabled = false;
+    });
+  }
+
+  function generateMockInfo(url, platform) {
+    const p = PLATFORM_MAP[platform];
+    const mockHashtags = ['#content', '#creator', '#' + platform, '#trending', '#video', '#socialmedia', '#digital', '#viral'];
+    return {
+      url,
+      platform,
+      title:       p.name + ' Video — Sample Title (Demo Mode)',
+      description: 'This is a demo result. Connect the backend to get real metadata.',
+      hashtags:    mockHashtags,
+      thumbnail:   '',
+      duration:    217,
+      uploader:    '@demo_creator',
+      view_count:  142800,
+    };
+  }
+
+  function showProgress(text, status) {
+    const el = document.getElementById('dl-progress');
+    document.getElementById('dl-status-text').textContent = text;
+    const badge = document.getElementById('dl-status-badge');
+    badge.textContent = status;
+    badge.className = 'badge badge-' + (status === 'completed' ? 'green' : status === 'failed' ? 'red' : 'amber');
+    el.classList.add('show');
+    const bar = document.getElementById('dl-progress-bar');
+    bar.style.width = status === 'completed' ? '100%' : '60%';
+  }
+
+  function hideProgress() {
+    document.getElementById('dl-progress').classList.remove('show');
+  }
+
+  function showVideoResult(info) {
+    state.videoInfo = info;
+    showProgress('Analysis complete!', 'completed');
+
+    const platform = PLATFORM_MAP[info.platform] || { name: info.platform, icon: '🔗' };
+
+    document.getElementById('result-thumb').src = info.thumbnail || '';
+    document.getElementById('result-thumb').style.display = info.thumbnail ? 'block' : 'none';
+    document.getElementById('result-platform').textContent = platform.icon + ' ' + platform.name;
+    document.getElementById('result-title').textContent = info.title || 'Untitled';
+    document.getElementById('result-uploader').textContent = info.uploader ? 'by ' + info.uploader : '';
+    document.getElementById('result-duration').textContent = info.duration ? formatDuration(info.duration) : '';
+    document.getElementById('result-dur-text').textContent = info.duration ? '⏱ ' + formatDuration(info.duration) : '';
+    document.getElementById('result-views').textContent = info.view_count ? '👁 ' + info.view_count.toLocaleString() + ' views' : '';
+
+    // Hashtags
+    const hashCloud = document.getElementById('result-hashtags');
+    hashCloud.innerHTML = (info.hashtags || []).slice(0, 15).map(h =>
+      `<span class="hashtag-chip" onclick="copyText('${h}')" title="Click to copy">${h}</span>`
+    ).join('');
+
+    // Share links
+    const shareRow = document.getElementById('share-row');
+    const shareTargets = [
+      { id: 'facebook', label: '👥 Facebook', url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(info.url)}` },
+      { id: 'twitter',  label: '🐦 Twitter',  url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(info.url)}&text=${encodeURIComponent(info.title || '')}` },
+      { id: 'linkedin', label: '💼 LinkedIn', url: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(info.url)}` },
+      { id: 'reddit',   label: '🤖 Reddit',   url: `https://reddit.com/submit?url=${encodeURIComponent(info.url)}&title=${encodeURIComponent(info.title || '')}` },
+      { id: 'whatsapp', label: '💬 WhatsApp', url: `https://wa.me/?text=${encodeURIComponent((info.title || '') + ' ' + info.url)}` },
+    ];
+    shareRow.innerHTML = shareTargets.map(s =>
+      `<a href="${s.url}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost" style="font-size:0.8rem;padding:6px 12px;border:1px solid var(--border);">${s.label}</a>`
+    ).join('');
+
+    document.getElementById('video-result').classList.add('show');
+    document.getElementById('supported-section').style.display = 'none';
+
+    // Save to local downloads list
+    addToDownloads(info);
+  }
+
+  function addToDownloads(info) {
+    const item = {
+      id:        Date.now(),
+      url:       info.url,
+      platform:  info.platform,
+      title:     info.title || 'Untitled',
+      thumbnail: info.thumbnail || '',
+      hashtags:  info.hashtags || [],
+      duration:  info.duration || 0,
+      status:    'pending',
+      createdAt: new Date().toISOString(),
+    };
+    state.downloads.unshift(item);
+    if (state.downloads.length > 50) state.downloads.pop();
+    localStorage.setItem('sh_downloads', JSON.stringify(state.downloads));
+  }
+
+  function startDownload() {
+    const url = document.getElementById('url-input').value.trim();
+    if (!url) return;
+
+    showProgress('Download queued...', 'pending');
+
+    fetch(API + '/api/downloads/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(state.token ? { Authorization: 'Bearer ' + state.token } : {}),
+      },
+      body: JSON.stringify({ url }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.download_id) {
+        showProgress('Downloading... (check back in a moment)', 'pending');
+        pollDownloadStatus(data.download_id);
+        showToast('Download started! 📥');
+      } else {
+        throw new Error(data.detail);
+      }
+    })
+    .catch(() => {
+      // Demo mode
+      showToast('Demo mode: connect the backend for real downloads. Caption & hashtags are available above!', 'info');
+      showProgress('Demo mode — backend required for actual file download', 'pending');
+      // Update local record
+      if (state.downloads[0]) {
+        state.downloads[0].status = 'demo';
+        localStorage.setItem('sh_downloads', JSON.stringify(state.downloads));
+      }
+    });
+  }
+
+  let pollInterval = null;
+  function pollDownloadStatus(id) {
+    let attempts = 0;
+    pollInterval = setInterval(async () => {
+      attempts++;
+      if (attempts > 60) { clearInterval(pollInterval); return; }
+      try {
+        const r = await fetch(API + `/api/downloads/${id}/status`);
+        const data = await r.json();
+        const status = data.status || '';
+        if (status === 'completed') {
+          clearInterval(pollInterval);
+          showProgress('Download complete! ✅', 'completed');
+          showToast('✅ Download ready!');
+          if (state.downloads[0]) {
+            state.downloads[0].status = 'completed';
+            state.downloads[0].file_url = data.file_path;
+            localStorage.setItem('sh_downloads', JSON.stringify(state.downloads));
+          }
+          // Add download link
+          const btn = document.createElement('a');
+          btn.href = API + data.file_path;
+          btn.download = '';
+          btn.className = 'btn btn-primary w-full mt-2';
+          btn.textContent = '⬇️ Save File';
+          document.getElementById('action-grid') && document.getElementById('action-grid').appendChild(btn);
+        } else if (status.startsWith('failed')) {
+          clearInterval(pollInterval);
+          showProgress('Download failed: ' + status, 'failed');
+          showToast('Download failed. Try again.', 'error');
+        } else {
+          showProgress('Downloading... ' + status, 'pending');
+          document.getElementById('dl-progress-bar').style.width = Math.min(50 + attempts * 2, 90) + '%';
+        }
+      } catch {}
+    }, 2000);
+  }
+
+  function copyCaption() {
+    if (!state.videoInfo) return;
+    const text = state.videoInfo.description || state.videoInfo.title || '';
+    copyText(text);
+    showToast('Caption copied to clipboard! 📋');
+  }
+
+  function copyHashtags() {
+    if (!state.videoInfo) return;
+    const tags = (state.videoInfo.hashtags || []).join(' ');
+    copyText(tags);
+    showToast('Hashtags copied! 🏷️');
+  }
+
+  /* ═══════════════════════════════════════════════
+     CAPTION OPTIMIZER
+  ═══════════════════════════════════════════════ */
+  function updateCounter() {
+    const txt = document.getElementById('caption-input').value;
+    document.getElementById('caption-counter').textContent =
+      txt.length + ' chars · ' + txt.trim().split(/\s+/).filter(Boolean).length + ' words';
+  }
+
+  function selectTone(btn) {
+    document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.currentTone = btn.dataset.tone;
+  }
+
+  function togglePlatformTag(btn) {
+    if (btn.classList.contains('active')) {
+      btn.classList.remove('active');
+      state.currentPlatform = null;
+    } else {
+      document.querySelectorAll('.platform-tag').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.currentPlatform = btn.dataset.platform;
+    }
+  }
+
+  function optimizeCaption() {
+    const text = document.getElementById('caption-input').value.trim();
+    if (!text) { showToast('Please enter a caption', 'error'); return; }
+
+    const btn = document.getElementById('optimize-btn');
+    btn.innerHTML = '<div class="spinner"></div> Optimizing...';
+    btn.disabled = true;
+
+    fetch(API + '/api/captions/optimize', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(state.token ? { Authorization: 'Bearer ' + state.token } : {}),
+      },
+      body: JSON.stringify({
+        text,
+        tone:         state.currentTone,
+        platform:     state.currentPlatform,
+        add_hashtags: true,
+        add_emoji:    true,
+        save:         !!state.currentUser,
+      }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success && data.data) {
+        displayOptimizerResult(data.data);
+      } else {
+        throw new Error(data.detail);
+      }
+    })
+    .catch(() => {
+      // Offline NLP fallback
+      const result = localOptimize(text, state.currentTone, state.currentPlatform);
+      displayOptimizerResult(result);
+    })
+    .finally(() => {
+      btn.innerHTML = '✨ Optimize Caption';
+      btn.disabled = false;
+    });
+  }
+
+  /* ─── Local NLP Optimizer (no backend) ─────────────────── */
+  const TONES_CFG = {
+    professional: {
+      openers: ['Excited to share', 'Proud to announce', 'Delighted to present', 'It's my pleasure to introduce'],
+      closers: ['Let's connect and discuss.', 'Share your thoughts below.', 'What are your insights?'],
+      emoji: ['💡', '🎯', '📈', '✅', '🏆'],
+    },
+    viral: {
+      openers: ['🔥 This is WILD →', 'Nobody talks about this...', 'Stop scrolling. This matters.', 'POV: You just discovered'],
+      closers: ['Like + save if this helped! 🙏', 'Tag someone who NEEDS this!', 'Drop a 🔥 if you agree!'],
+      emoji: ['🔥', '😱', '💥', '🤯', '👇'],
+    },
+    marketing: {
+      openers: ['✨ Introducing', '🚀 Launching now:', 'Big news →', 'Say hello to'],
+      closers: ['Link in bio 🔗', 'Limited time only ⏰', 'DM us to learn more!'],
+      emoji: ['✨', '🚀', '🎁', '💎', '⭐'],
+    },
+    storytelling: {
+      openers: ['Three years ago, I...', 'Nobody believed me when I said...', 'The day everything changed:', 'Here\'s a story worth telling:'],
+      closers: ['What\'s your story? Tell me below 👇', 'Have you been through something similar?'],
+      emoji: ['❤️', '🌟', '💫', '🙌', '✨'],
+    },
+    casual: {
+      openers: ['okay so', 'not gonna lie,', 'real talk →', 'honestly?'],
+      closers: ['lmk what you think 👀', 'thoughts?? 💭', 'who else relates 😂'],
+      emoji: ['😂', '💀', '✨', '👀', '💯'],
+    },
+  };
+
+  const HASHTAG_DB = {
+    general:  ['#trending', '#viral', '#explore', '#foryou', '#content', '#creator', '#daily', '#motivation', '#inspo', '#lifestyle'],
+    business: ['#entrepreneur', '#startup', '#business', '#success', '#marketing', '#leadership', '#growth', '#innovation'],
+    tech:     ['#technology', '#ai', '#coding', '#developer', '#programming', '#tech', '#innovation', '#digital'],
+    fitness:  ['#fitness', '#gym', '#workout', '#health', '#wellness', '#fitfam', '#training', '#nutrition'],
+    food:     ['#food', '#foodie', '#recipe', '#cooking', '#yummy', '#delicious', '#instafood', '#homemade'],
+    travel:   ['#travel', '#wanderlust', '#adventure', '#explore', '#vacation', '#trip', '#nature', '#photography'],
+    fashion:  ['#fashion', '#style', '#ootd', '#outfit', '#clothes', '#beauty', '#model', '#luxury'],
+  };
+
+  const PLATFORM_LIMITS = { instagram: 30, twitter: 3, linkedin: 5, tiktok: 10, facebook: 8 };
+
+  function localOptimize(text, tone, platform) {
+    const cfg  = TONES_CFG[tone] || TONES_CFG.professional;
+    let   out  = text.trim();
+
+    // Basic grammar
+    out = out.replace(/\bi\b/g, 'I')
+             .replace(/dont/g, "don't")
+             .replace(/cant/g, "can't")
+             .replace(/wont/g, "won't");
+    if (out[0]) out = out[0].toUpperCase() + out.slice(1);
+    if (!'.!?'.includes(out.slice(-1))) out += '.';
+
+    // Add opener
+    const opener = cfg.openers[Math.floor(Math.random() * cfg.openers.length)];
+    const closer = cfg.closers[Math.floor(Math.random() * cfg.closers.length)];
+    out = opener + ' — ' + out + '\n\n' + closer;
+
+    // Hashtags
+    const lower = text.toLowerCase();
+    let   cat   = 'general';
+    if (/business|startup|company|revenue/.test(lower))   cat = 'business';
+    else if (/tech|code|software|ai|digital/.test(lower)) cat = 'tech';
+    else if (/fitness|gym|workout|health/.test(lower))    cat = 'fitness';
+    else if (/food|recipe|cook|eat/.test(lower))          cat = 'food';
+    else if (/travel|trip|vacation|journey/.test(lower))  cat = 'travel';
+    else if (/fashion|style|outfit|clothes/.test(lower))  cat = 'fashion';
+
+    const pool  = [...(HASHTAG_DB[cat] || []), ...HASHTAG_DB.general];
+    const limit = (platform && PLATFORM_LIMITS[platform]) || 15;
+    const tags  = [...new Set(pool)].sort(() => Math.random() - 0.5).slice(0, limit);
+
+    // Score
+    let score = 50;
+    if (out.length > 150) score += 10;
+    if (/\?/.test(out))   score += 10;
+    if (tags.length > 5)  score += 15;
+    if (/\n/.test(out))   score += 5;
+    score = Math.min(score + 10, 100);
+
+    const suggestions = [];
+    if (text.length < 50)      suggestions.push('💡 Write a longer caption (100+ chars) for better engagement.');
+    if (!/\?/.test(out))       suggestions.push('❓ Add a question to encourage comments.');
+    if (!platform)             suggestions.push('🎯 Select a platform for optimized hashtag count.');
+
+    return {
+      original:    text,
+      optimized:   out,
+      hashtags:    tags,
+      tone,
+      score,
+      word_count:  out.split(/\s+/).filter(Boolean).length,
+      char_count:  out.length,
+      suggestions,
+    };
+  }
+
+  function displayOptimizerResult(data) {
+    state.optimizerResult = data;
+
+    document.getElementById('result-empty').style.display   = 'none';
+    document.getElementById('result-content').style.display = 'block';
+
+    // Score
+    const score = data.score || 0;
+    const scoreEl = document.getElementById('score-ring');
+    const scoreColor = score >= 80 ? '#10b981' : score >= 60 ? '#f59e0b' : '#ef4444';
+    scoreEl.style.background = `conic-gradient(${scoreColor} ${score * 3.6}deg, var(--surface2) 0deg)`;
+    scoreEl.style.boxShadow = `0 0 0 4px var(--surface), 0 0 20px ${scoreColor}40`;
+    document.getElementById('score-number').textContent = score;
+
+    document.getElementById('result-tone-badge').textContent = data.tone;
+    document.getElementById('result-stats-badge').textContent = data.word_count + ' words';
+
+    state.currentTab = 'optimized';
+    document.querySelectorAll('.result-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'optimized'));
+    document.getElementById('result-text-content').textContent = data.optimized;
+
+    // Hashtags
+    const hashCloud = document.getElementById('result-hashtag-cloud');
+    hashCloud.innerHTML = (data.hashtags || []).map(h =>
+      `<span class="hashtag-chip" onclick="copyText('${h}')" title="Click to copy">${h}</span>`
+    ).join('');
+
+    // Suggestions
+    const suggList = document.getElementById('result-suggestions-list');
+    suggList.innerHTML = (data.suggestions || []).map(s =>
+      `<li class="suggestion-item"><span>•</span><span>${s}</span></li>`
+    ).join('');
+
+    // Save to local captions
+    const cap = {
+      id: Date.now(),
+      original: data.original,
+      optimized: data.optimized,
+      tone: data.tone,
+      hashtags: data.hashtags || [],
+      platform: state.currentPlatform,
+      createdAt: new Date().toISOString(),
+    };
+    state.captions.unshift(cap);
+    if (state.captions.length > 50) state.captions.pop();
+    localStorage.setItem('sh_captions', JSON.stringify(state.captions));
+
+    showToast('Caption optimized! Score: ' + score + '/100 ✨');
+  }
+
+  function switchResultTab(btn) {
+    document.querySelectorAll('.result-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    state.currentTab = btn.dataset.tab;
+    if (state.optimizerResult) {
+      document.getElementById('result-text-content').textContent =
+        state.currentTab === 'optimized' ? state.optimizerResult.optimized : state.optimizerResult.original;
+    }
+  }
+
+  function copyOptimizedCaption() {
+    if (!state.optimizerResult) return;
+    const text = state.currentTab === 'optimized' ? state.optimizerResult.optimized : state.optimizerResult.original;
+    copyText(text);
+    showToast('Caption copied! 📋');
+  }
+
+  function copyResultHashtags() {
+    if (!state.optimizerResult) return;
+    copyText((state.optimizerResult.hashtags || []).join(' '));
+    showToast('Hashtags copied! 🏷️');
+  }
+
+  /* ═══════════════════════════════════════════════
+     DASHBOARD
+  ═══════════════════════════════════════════════ */
+  function loadDashboard() {
+    if (state.currentUser) {
+      document.getElementById('dash-welcome').textContent = 'Welcome back, ' + state.currentUser.username + ' 👋';
+    }
+
+    const downloads = state.downloads;
+    const captions  = state.captions;
+
+    // Stats
+    const allHashtags = [...new Set(captions.flatMap(c => c.hashtags || []))];
+    const platforms   = [...new Set(downloads.map(d => d.platform))];
+
+    document.getElementById('stat-downloads').textContent = downloads.length;
+    document.getElementById('stat-captions').textContent  = captions.length;
+    document.getElementById('stat-hashtags').textContent  = allHashtags.length;
+    document.getElementById('stat-platforms').textContent = platforms.length;
+
+    // Recent downloads
+    const dlList = document.getElementById('recent-downloads-list');
+    if (downloads.length === 0) {
+      document.getElementById('no-downloads-msg').style.display = 'block';
+    } else {
+      document.getElementById('no-downloads-msg').style.display = 'none';
+      dlList.innerHTML = downloads.slice(0, 5).map(d => {
+        const p = PLATFORM_MAP[d.platform] || { icon: '🔗', name: d.platform };
+        return `
+          <div class="activity-item">
+            <span class="activity-icon">${p.icon}</span>
+            <div class="activity-text">
+              <div class="activity-title">${escHtml(d.title || 'Untitled')}</div>
+              <div class="activity-meta">${p.name} · ${timeAgo(d.createdAt)}</div>
+            </div>
+            <span class="badge ${d.status === 'completed' ? 'badge-green' : d.status === 'demo' ? 'badge-cyan' : 'badge-amber'}">${d.status}</span>
+          </div>`;
+      }).join('');
+    }
+
+    // Platform bars
+    const pBars = document.getElementById('platform-bars');
+    if (downloads.length === 0) {
+      document.getElementById('no-platform-msg').style.display = 'block';
+    } else {
+      document.getElementById('no-platform-msg').style.display = 'none';
+      const counts = {};
+      downloads.forEach(d => { counts[d.platform] = (counts[d.platform] || 0) + 1; });
+      const max = Math.max(...Object.values(counts));
+      pBars.innerHTML = Object.entries(counts).map(([p, cnt]) => {
+        const pl = PLATFORM_MAP[p] || { icon: '🔗', name: p };
+        return `
+          <div class="platform-bar-item">
+            <div class="platform-bar-header">
+              <span>${pl.icon} ${pl.name}</span>
+              <span style="color:var(--muted)">${cnt}</span>
+            </div>
+            <div class="platform-bar-track">
+              <div class="platform-bar-fill" style="width:${Math.round(cnt/max*100)}%"></div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // Recent captions
+    const capList = document.getElementById('recent-captions-list');
+    if (captions.length === 0) {
+      document.getElementById('no-captions-msg').style.display = 'block';
+    } else {
+      document.getElementById('no-captions-msg').style.display = 'none';
+      capList.innerHTML = captions.slice(0, 5).map(c => `
+        <div class="activity-item">
+          <span class="activity-icon">✍️</span>
+          <div class="activity-text">
+            <div class="activity-title">${escHtml((c.optimized || c.original || '').slice(0, 80))}…</div>
+            <div class="activity-meta">${c.tone} · ${timeAgo(c.createdAt)}</div>
+          </div>
+          <button class="btn btn-ghost" style="font-size:0.75rem;padding:4px 10px;" onclick="copyText('${escAttr(c.optimized || c.original || '')}'); showToast('Copied!')">Copy</button>
+        </div>`).join('');
+    }
+  }
+
+  /* ═══════════════════════════════════════════════
+     LIBRARY
+  ═══════════════════════════════════════════════ */
+  function loadLibrary() {
+    renderLibrary();
+  }
+
+  function setLibFilter(btn) {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.libFilter = btn.dataset.filter;
+    renderLibrary();
+  }
+
+  function filterLibrary(val) {
+    state.libSearch = val.toLowerCase();
+    renderLibrary();
+  }
+
+  function renderLibrary() {
+    const s = state.libSearch;
+    const f = state.libFilter;
+
+    const downloads = state.downloads.filter(d =>
+      !s || (d.title || '').toLowerCase().includes(s) || d.platform.includes(s)
+    );
+    const captions = state.captions.filter(c =>
+      !s || (c.original || '').toLowerCase().includes(s) || (c.optimized || '').toLowerCase().includes(s)
+    );
+    const allTags = [...new Set(state.captions.flatMap(c => c.hashtags || []))].filter(h => !s || h.toLowerCase().includes(s));
+
+    // Sections visibility
+    document.getElementById('lib-videos-section').style.display  = (f === 'all' || f === 'videos')   ? '' : 'none';
+    document.getElementById('lib-captions-section').style.display= (f === 'all' || f === 'captions') ? '' : 'none';
+    document.getElementById('lib-hashtags-section').style.display= (f === 'all' || f === 'hashtags') ? '' : 'none';
+
+    // Videos
+    document.getElementById('lib-video-count').textContent = '(' + downloads.length + ')';
+    const vGrid = document.getElementById('lib-videos-grid');
+    const noVid = document.getElementById('lib-no-videos');
+    if (downloads.length === 0) {
+      noVid.style.display = 'block';
+      vGrid.innerHTML = '';
+    } else {
+      noVid.style.display = 'none';
+      vGrid.innerHTML = downloads.map(d => {
+        const p = PLATFORM_MAP[d.platform] || { icon: '🔗', name: d.platform };
+        return `
+          <div class="lib-card">
+            <div class="lib-thumb">
+              ${d.thumbnail
+                ? `<img src="${escAttr(d.thumbnail)}" alt="${escAttr(d.title || '')}" loading="lazy" />`
+                : `<div class="lib-thumb-placeholder">${p.icon}</div>`}
+            </div>
+            <div class="lib-card-body">
+              <div class="lib-card-title">${escHtml(d.title || 'Untitled')}</div>
+              <div class="lib-card-meta">
+                <span>${p.icon} ${p.name}</span>
+                <span class="badge ${d.status === 'completed' ? 'badge-green' : 'badge-amber'}">${d.status}</span>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // Captions
+    document.getElementById('lib-caption-count').textContent = '(' + captions.length + ')';
+    const cList  = document.getElementById('lib-captions-list');
+    const noCap  = document.getElementById('lib-no-captions');
+    if (captions.length === 0) {
+      noCap.style.display = 'block';
+      cList.innerHTML = '';
+    } else {
+      noCap.style.display = 'none';
+      cList.innerHTML = captions.map(c => `
+        <div class="glass-card" style="padding:16px 20px; margin-bottom:10px; display:flex; align-items:flex-start; gap:14px;">
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; gap:8px; margin-bottom:8px; flex-wrap:wrap;">
+              <span class="badge badge-brand">${c.tone}</span>
+              ${c.platform ? `<span class="badge badge-cyan">${c.platform}</span>` : ''}
+              <span class="text-xs text-muted" style="margin-left:auto;">${timeAgo(c.createdAt)}</span>
+            </div>
+            <p class="text-sm" style="line-height:1.6; overflow:hidden; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical;">${escHtml((c.optimized || c.original || '').slice(0, 200))}</p>
+            ${c.hashtags?.length ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;">${c.hashtags.slice(0,6).map(h=>`<span class="badge badge-brand" style="font-size:0.72rem;">${escHtml(h)}</span>`).join('')}</div>` : ''}
+          </div>
+          <button class="btn btn-ghost" style="font-size:0.78rem;flex-shrink:0;" onclick="copyText('${escAttr(c.optimized || c.original || '')}'); showToast('Copied!')">📋 Copy</button>
+        </div>`).join('');
+    }
+
+    // Hashtag bank
+    const hCloud = document.getElementById('lib-hashtags-cloud');
+    if (allTags.length === 0) {
+      hCloud.innerHTML = '<span class="text-sm text-muted">Hashtags from optimized captions will appear here.</span>';
+    } else {
+      hCloud.innerHTML = allTags.map(h =>
+        `<span class="hashtag-chip" onclick="copyText('${escAttr(h)}'); showToast('${h} copied!')" title="Click to copy">${escHtml(h)}</span>`
+      ).join('');
+    }
+  }
+
+  function copyAllHashtags() {
+    const tags = [...new Set(state.captions.flatMap(c => c.hashtags || []))];
+    if (!tags.length) { showToast('No hashtags yet', 'info'); return; }
+    copyText(tags.join(' '));
+    showToast('All ' + tags.length + ' hashtags copied! 🏷️');
+  }
+
+  /* ═══════════════════════════════════════════════
+     UTILITIES
+  ═══════════════════════════════════════════════ */
+  function copyText(text) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    el.style.cssText = 'position:fixed;opacity:0;';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    el.remove();
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function escAttr(str) {
+    return String(str).replace(/'/g, '\\\'').replace(/"/g, '&quot;').slice(0, 200);
+  }
+
+  function formatDuration(secs) {
+    if (!secs) return '';
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return m + ':' + String(s).padStart(2, '0');
+  }
+
+  function timeAgo(dateStr) {
+    if (!dateStr) return '';
+    const diff = (Date.now() - new Date(dateStr)) / 1000;
+    if (diff < 60)     return 'just now';
+    if (diff < 3600)   return Math.floor(diff / 60) + 'm ago';
+    if (diff < 86400)  return Math.floor(diff / 3600) + 'h ago';
+    return Math.floor(diff / 86400) + 'd ago';
+  }
+
+  /* ═══════════════════════════════════════════════
+     INIT
+  ═══════════════════════════════════════════════ */
+  // Handle URL hash navigation
+  function checkHash() {
+    const pages = ['home', 'downloader', 'optimizer', 'dashboard', 'library', 'login', 'signup'];
+    const hash = window.location.hash.replace('#', '');
+    if (pages.includes(hash)) navigate(hash);
+  }
+  window.addEventListener('hashchange', checkHash);
+  checkHash();
+
+  </script>
+</body>
+</html>
