@@ -2705,11 +2705,14 @@
     const target = document.getElementById('page-' + page);
 
     if(target){
-        target.classList.add('active');
-        window.scrollTo({top:0, behavior:'smooth'});
-    }
+       target.classList.add('active');
+       window.location.hash = page;
+       window.scrollTo({
+          top:0,
+          behavior:'smooth'
+    });
 
-}
+ }
   </script>
 </body>
 </html>
