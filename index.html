@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SocialHub — Free Social Media Optimizer & Downloader</title>
+  <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg">
   <meta name="description" content="Download videos, optimize captions, manage content. Instagram, YouTube, TikTok & more. 100% free." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -2668,27 +2669,46 @@
      INIT
   ═══════════════════════════════════════════════ */
   // Handle URL hash navigation
- function checkHash() {
-     const pages = ['home', 'download', 'captions', 'dashboard', 'library', 'login', 'signup'];
-     const hash = window.location.hash.replace('#', '');
-     if (pages.includes(hash)) navigate(hash);
+  function checkHash() {
+
+    const pages = [
+        'home',
+        'downloader',
+        'optimizer',
+        'dashboard',
+        'library',
+        'login',
+        'signup'
+    ];
+
+    const hash = window.location.hash.replace('#','');
+
+    if(pages.includes(hash)){
+        navigate(hash);
+    }
+
  }
-  window.addEventListener('hashchange', checkHash);
+ window.addEventListener("hashchange", checkHash);
+ window.addEventListener("load", checkHash);
   checkHash();
 
   </script>
   <script>
-function navigate(sectionId) {
-    const section = document.getElementById(sectionId);
+ function navigate(page) {
 
-    if (section) {
-        window.location.hash = sectionId;
+    // remove active class from all pages
+    document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active');
+    });
 
-        section.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
+    // open selected page
+    const target = document.getElementById('page-' + page);
+
+    if(target){
+        target.classList.add('active');
+        window.scrollTo({top:0, behavior:'smooth'});
     }
+
 }
   </script>
 </body>
