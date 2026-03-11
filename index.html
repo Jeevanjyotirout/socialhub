@@ -2691,28 +2691,25 @@
  window.addEventListener("hashchange", checkHash);
  window.addEventListener("load", checkHash);
   checkHash();
+    
+function navigate(page) {
 
-  </script>
-  <script>
- function navigate(page) {
+  if ((page === 'dashboard' || page === 'library') && !state.currentUser) {
+    showToast('Please log in to access this page.', 'info');
+    page = 'login';
+  }
 
-    // remove active class from all pages
-    document.querySelectorAll('.page').forEach(p => {
-        p.classList.remove('active');
-    });
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + page);
+  if (!target) return;
+  target.classList.add('active');
+  state.currentPage = page;
 
-    // open selected page
-    const target = document.getElementById('page-' + page);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    if(target){
-       target.classList.add('active');
-       window.location.hash = page;
-       window.scrollTo({
-          top:0,
-          behavior:'smooth'
-    });
-
- }
+  if (page === 'dashboard') loadDashboard();
+  if (page === 'library') loadLibrary();
+}
   </script>
 </body>
 </html>
