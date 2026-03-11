@@ -210,3 +210,11 @@ async def _process(download_id: int, url: str):
                 dl.status    = "failed"
                 dl.error_msg = str(exc)[:500]
                 await session.commit()
+                
+def check_download_limit(user):
+
+    if user.plan == "free":
+        if user.downloads_today >= 5:
+            raise Exception("Upgrade to Pro for unlimited downloads")
+
+    return True
